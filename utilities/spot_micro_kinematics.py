@@ -1,4 +1,4 @@
-"""Kinematic transformations for a quadriped robot. 
+"""Forward and inverse kinematic transformations for a quadriped robot. 
 
 Equations from:
 Şen, Muhammed Arif & Bakırcıoğlu, Veli & Kalyoncu, Mete. (2017). 
@@ -7,7 +7,7 @@ International Journal of Scientific & Technology Research. 6.
 """
 
 from . import transformations
-from math import pi, cos, sin
+from math import pi, cos, sin, atan2, sqrt
 import numpy as np
 
 def t_rightback(t_m,l,w):
@@ -189,3 +189,43 @@ def t_0_to_4(theta1, theta2, theta3, l1, l2, l3):
         A 4x4 numpy matrix. Homogeneous transform from joint 0 to 4
     '''
     return t_0_to_1(theta1,l1) @ t_1_to_2() @ t_2_to_3(theta2,l2) @ t_3_to_4(theta3,l3)
+
+def ikine(x4,y4,z4,l1,l2,l3,legs13=True):
+    '''Use inverse kinematics fo calculate the leg angles for a leg to achieve a desired
+    leg end point position (x4,y4,z4)
+
+    Args:
+        x4: x position of leg end point relative to leg start point coordinate system.
+        y4: y position of leg end point relative to leg start point coordinate system.
+        z4: z position of leg end point relative to leg start point coordinate system.
+        l1: leg link 1 length
+        l2: leg link 2 length
+        l3: leg link 3 length
+        legs13: Optional input, boolean indicating whether equations are for legs 1 or 3. 
+                If false, then equation for legs 2 and 4 is used
+
+    Returns:
+        A length 3 tuple of leg angles in the order (q1,q2,q3)
+    '''
+
+    # Supporting variable D
+    D = (x4**2 + y4**2 + z4**2 - l1**2 - l2**2 - l3**2)/(2*l2*l3)
+
+    if legs13 == True:
+        q3 = atan2(-sqrt(1-D**2),D)
+    else:
+        q3 = atan2(sqrt(1-D**2),D)
+    
+    q2 = atan2(z4, sqrt(x4**2 + y4**2 - l1**2)) - atan2(l3*sin(q3), l2+l3*cos(q3) )  
+
+    q1 = -atan2(-y4, x4) - atan2(sqrt(x4**2 + y4**2 - l1**2), -l1)
+
+    return (q1,q2,q3)
+
+def set_pitch_ange():
+    '''Use inverse kinematics to calculate the four leg angles required to achieve a pitch
+    angle with no relative body motion
+
+
+    '''
+    return None
