@@ -137,3 +137,27 @@ def homog_transform(x_ang,y_ang,z_ang,x_t,y_t,z_t):
     """
     return homog_rotxyz(x_ang,y_ang,z_ang) @ homog_transxyz(x_t,y_t,z_t)
 
+def ht_inverse(ht):
+    '''Calculate the inverse of a homogeneous transformation matrix
+
+    Args
+        ht: Input 4x4 nump matrix homogeneous transformation
+
+    Returns:
+        A 4x4 numpy matrix that is the inverse of the inputted transformation
+    '''
+
+    # Invert the rotation part of the homogeneous transform
+
+    temp_rot = ht[0:3,0:3]
+
+    temp_vec = -1*ht[0:3,3]
+
+    temp_rot_ht = np.block([ [temp_rot.transpose(),   np.zeros((3,1))],
+                             [np.zeros((1,3))     ,         np.eye(1)] ])
+
+
+    temp_vec_ht = np.eye(4)
+    temp_vec_ht[0:3,3] = temp_vec
+
+    return temp_rot_ht @ temp_vec_ht

@@ -218,3 +218,36 @@ class TestSpotMicroKinematics(unittest.TestCase):
             res = False
             print (err)
         self.assertTrue(res)
+
+    def test_get_leg_delta_coords(self):
+        '''Test computation of leg delta coordinates from a body pose'''
+        
+        # Create a body pose
+        x = 0
+        y = .18
+        z = 0
+        (phi,theta,psi) = (0,0,0)
+
+        ht_body = transformations.homog_transform(x,y,z,phi,theta,psi)
+        
+        hip_len = 0.055
+        l = .186
+        w = .078
+
+        desired_p4_points = ((-l/2,   0,  w/2 + hip_len),
+                              (l/2 ,  0,  w/2 + hip_len),
+                              (l/2 ,  0, -w/2 - hip_len),
+                              (-l/2 , 0, -w/2 - hip_len))
+
+        ht_body = transformations.homog_transform(0,0,0,x,y,z)
+
+        x = spot_micro_kinematics.get_leg_delta_coords(ht_body,desired_p4_points,l,w)
+
+        print(x)
+        # try:
+        #     np.testing.assert_array_almost_equal(t, known_true)
+        #     res = True
+        # except AssertionError as err:
+        #     res = False
+        #     print (err)
+        # self.assertTrue(res)

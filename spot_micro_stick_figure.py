@@ -127,7 +127,7 @@ class SpotMicroStickFigure(object):
         self.body_length = 0.186
 
         self.x = 0
-        self.y = 0
+        self.y = 0.18
         self.z = 0
         
         self.phi = 0*d2r
@@ -176,10 +176,10 @@ class SpotMicroStickFigure(object):
             leg_angs: Tuple of 4 lists of leg angles. Legs in the order rightback
                       rightfront, leftfront, leftback. ANgles in the order q1,q2,q3.
                       An example input:
-                        ([rb_q1,rb_q2,rb_q3],
-                         [rf_q1,rf_q2,rf_q3],
-                         [lf_q1,lf_q2,lf_q3],
-                         [lb_q1,lb_q2,lb_q3])
+                        ((rb_q1,rb_q2,rb_q3),
+                         (rf_q1,rf_q2,rf_q3),
+                         (lf_q1,lf_q2,lf_q3),
+                         (lb_q1,lb_q2,lb_q3))
 
         Returns:
             Nothing
@@ -188,3 +188,7 @@ class SpotMicroStickFigure(object):
         self.leg_rightfront.set_angles(leg_angs[1][0],leg_angs[1][1],leg_angs[1][2])
         self.leg_leftfront.set_angles(leg_angs[2][0],leg_angs[2][1],leg_angs[2][2])
         self.leg_leftback.set_angles(leg_angs[3][0],leg_angs[3][1],leg_angs[3][2])            
+
+    def print_leg_angles(self):
+        ''' Print the joint angles for alll four legs'''
+        return None

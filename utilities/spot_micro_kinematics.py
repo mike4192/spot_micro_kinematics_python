@@ -190,7 +190,7 @@ def t_0_to_4(theta1, theta2, theta3, l1, l2, l3):
     '''
     return t_0_to_1(theta1,l1) @ t_1_to_2() @ t_2_to_3(theta2,l2) @ t_3_to_4(theta3,l3)
 
-def ikine(x4,y4,z4,l1,l2,l3,legs13=True):
+def ikine(x4,y4,z4,l1,l2,l3,legs12=True):
     '''Use inverse kinematics fo calculate the leg angles for a leg to achieve a desired
     leg end point position (x4,y4,z4)
 
@@ -201,8 +201,8 @@ def ikine(x4,y4,z4,l1,l2,l3,legs13=True):
         l1: leg link 1 length
         l2: leg link 2 length
         l3: leg link 3 length
-        legs13: Optional input, boolean indicating whether equations are for legs 1 or 3. 
-                If false, then equation for legs 2 and 4 is used
+        legs12: Optional input, boolean indicating whether equations are for legs 1 or 2. 
+                If false, then equation for legs 3 and 4 is used
 
     Returns:
         A length 3 tuple of leg angles in the order (q1,q2,q3)
@@ -211,16 +211,62 @@ def ikine(x4,y4,z4,l1,l2,l3,legs13=True):
     # Supporting variable D
     D = (x4**2 + y4**2 + z4**2 - l1**2 - l2**2 - l3**2)/(2*l2*l3)
 
-    if legs13 == True:
-        q3 = atan2(-sqrt(1-D**2),D)
-    else:
+    if legs12 == True:
         q3 = atan2(sqrt(1-D**2),D)
+    else:
+        q3 = atan2(-sqrt(1-D**2),D)
     
-    q2 = atan2(z4, sqrt(x4**2 + y4**2 - l1**2)) - atan2(l3*sin(q3), l2+l3*cos(q3) )  
+    q2 = atan2(z4, sqrt(x4**2 + y4**2 - l1**2)) - atan2(l3*sin(q3), l2 + l3*cos(q3) )  
 
-    q1 = -atan2(-y4, x4) - atan2(sqrt(x4**2 + y4**2 - l1**2), -l1)
+    # After using the equations, there seem to be two errors:
+    #   1. The first y4 should not have a negative sign
+    #   2. The entire equation should be multiplied by -1
+    # The equation for q1 below reflects these changes 
+    q1 = atan2(y4, x4) + atan2(sqrt(x4**2 + y4**2 - l1**2), -l1)
 
     return (q1,q2,q3)
+
+def get_leg_delta_coords(ht_body,p4_coords,l,w):
+    '''Get the delta coordinates for each leg's coordinate system to go into the 
+    inverse kinematics equations.
+
+    Args:
+        ht_body: Desired pose of the body. A 4x4 homogeneous transformation numpy matrix
+        p4_coords: A tuple of desired (x4,y4,z4) positions for the end point (point 4) of each of
+                    the four legs. Leg order: rigthback, rightfront, leftfront, leftback.
+                    Example input:
+                        ((x4_rb,y4_rb,z4_rb),
+                         (x4_rf,y4_rf,z4_rf),
+                         (x4_lf,y4_lf,z4_lf),
+                         (x4_lb,y4_lb,z4_lb))
+        l: Length of robot base
+        w: Width of robot base
+        
+    Returns:
+        A tuple of the delta (x,y,z) position for each leg from that leg's starting coordinate system. 
+    '''
+
+    # First get the pose (the homogeneous transformation matices) for each leg's start point coordinate system
+    ht_rb_leg = t_rightback(ht_body,l,w)
+    ht_rf_leg = t_rightfront(ht_body,l,w)
+    ht_lf_leg = t_leftback(ht_body,l,w)
+    ht_lb_leg = t_leftfront(ht_body,l,w)
+
+    # Transform global (x4,y4,z4) coordinates for each leg, into each leg's starting point coordinate system
+    # Use the transpose (same as inverse) of each leg's homogeneous transform. E.g.:
+    # foot_point_in_rb_legs_coord_system   =   transpose(ht_rb_leg) * foot_point_in_global_coord_sys 
+    
+    rb_foot_p4_global_coords = np.array([p4_coords[0][0], p4_coords[0][1], p4_coords[0][2], 1])
+    
+    # print(ht_rb_leg)
+
+    ht_rb_leg_inv = transformations.ht_inverse(ht_rb_leg)
+
+    rb_p4_in_leg_coord_sys = ht_rb_leg_inv.dot(rb_foot_p4_global_coords) 
+
+
+
+    return rb_p4_in_leg_coord_sys
 
 def set_pitch_ange():
     '''Use inverse kinematics to calculate the four leg angles required to achieve a pitch
