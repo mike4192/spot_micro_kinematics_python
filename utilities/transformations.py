@@ -80,7 +80,7 @@ def rotxyz(x_ang,y_ang,z_ang):
     Returns:
         The 3D rotation matrix for a x, y, z rotation
     """
-    return rotx(z_ang) @ roty(y_ang) @ rotz(z_ang)
+    return rotx(x_ang) @ roty(y_ang) @ rotz(z_ang)
 
 
 def homog_rotxyz(x_ang,y_ang,z_ang):
@@ -145,8 +145,8 @@ def ht_inverse(ht):
 
                 -------------------   ------------------- 
                 |           |  0  |   | 1   0   0  -x_t |
-    ht_inv =    |   R^-1    |  0  |   | 0   1   0  -y_t |
-                |___________|  0  | * | 0   0   1  -z_t |
+    ht_inv   =  |   R^-1    |  0  | * | 0   1   0  -y_t |
+                |___________|  0  |   | 0   0   1  -z_t |
                 | 0   0   0 |  1  |   | 0   0   0   1   |
                 -------------------   -------------------
 
@@ -161,18 +161,19 @@ def ht_inverse(ht):
     Returns:
         A 4x4 numpy matrix that is the inverse of the inputted transformation
     '''
+    # Get the rotation matrix part of the homogeneous transform and take the transpose to get the inverse
+    temp_rot = ht[0:3,0:3].transpose()
 
-    # Invert the rotation part of the homogeneous transform
-
-    temp_rot = ht[0:3,0:3]
-
+    # Get the linear transformation portion of the transform, and multiply elements by -1
     temp_vec = -1*ht[0:3,3]
 
-    temp_rot_ht = np.block([ [temp_rot.transpose(),   np.zeros((3,1))],
+    # Block the inverted rotation matrix back to a 4x4 homogeneous transform matrix
+    temp_rot_ht = np.block([ [temp_rot            ,   np.zeros((3,1))],
                              [np.zeros((1,3))     ,         np.eye(1)] ])
 
-
+    # Create a linear translation homogeneous transformation matrix 
     temp_vec_ht = np.eye(4)
     temp_vec_ht[0:3,3] = temp_vec
 
+    # Return the matrix product
     return temp_rot_ht @ temp_vec_ht

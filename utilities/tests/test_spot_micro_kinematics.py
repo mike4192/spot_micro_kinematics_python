@@ -220,7 +220,7 @@ class TestSpotMicroKinematics(unittest.TestCase):
         self.assertTrue(res)
 
     def test_get_leg_delta_coords(self):
-        '''Test computation of leg delta coordinates from a body pose'''
+        '''Test computation of leg delta coordinates from a desired body pose and foot end points'''
         
         # Create a body pose
         x = 0

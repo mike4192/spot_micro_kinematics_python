@@ -77,8 +77,6 @@ class TestRotationMatrices(unittest.TestCase):
             print (err)
         self.assertTrue(res)
 
-
-
     def test_translate(self):
         '''Test the linear translation on a vector example'''
         
@@ -136,6 +134,43 @@ class TestRotationMatrices(unittest.TestCase):
         self.assertTrue(res)
         
     def test_homog_transform_inverse(self):
+        '''Test a homogeneous transformation inverse'''
+
+        # Test by running a forward transformation on a set of coordinates, then reversing 
+        # it via the inverse, and making sure the two coordinates match
+
+        phi = 10*d2r
+        theta = 20*d2r
+        psi = -30*d2r
+
+        x_t = -5
+        y_t = 10
+        z_t = 2.56
+
+        test_x = 0.23
+        test_y = 100
+        test_z = -62
+        orig_coords = np.array([test_x,test_y,test_z,1])
+
+        # Get homogeneous transformation
+
+        ht = transformations.homog_transform(phi,theta,psi,x_t,y_t,z_t)
+        # Forward transformation
+        transformed_coords = ht.dot(orig_coords)
+
+        # Inverse of homogeneous transform
+        inv_ht = transformations.ht_inverse(ht)
+
+        # Getting back original coordinates
+        test_coords = inv_ht.dot(transformed_coords) 
+
+        try:
+            np.testing.assert_array_almost_equal(orig_coords, test_coords)
+            res = True
+        except AssertionError as err:
+            res = False
+            print (err)
+        self.assertTrue(res)
 
 
 if __name__ == '__main__':

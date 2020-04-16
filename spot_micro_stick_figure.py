@@ -118,7 +118,7 @@ class SpotMicroStickFigure(object):
         leg_leftback
         
     """
-    def __init__(self):
+    def __init__(self,x=0,y=.18,z=0,phi=0,theta=0,psi=0):
         '''constructor'''
         self.hip_length = 0.055
         self.upper_leg_length = 0.1075
@@ -126,16 +126,20 @@ class SpotMicroStickFigure(object):
         self.body_width = 0.078
         self.body_length = 0.186
 
-        self.x = 0
-        self.y = 0.18
-        self.z = 0
+        self.x = x
+        self.y = y
+        self.z = z
         
-        self.phi = 0*d2r
-        self.theta = 0*d2r
-        self.psi = 0*d2r     
+        self.phi = phi
+        self.theta = theta
+        self.psi = psi   
 
-        self.ht_body = transformations.homog_transform(self.phi,self.theta,self.psi,
-                                                       self.x,self.y,self.z)
+        # self.ht_body = transformations.homog_transform(self.phi,self.psi,self.theta,
+        #                                                self.x,self.y,self.z)
+
+        #TODO: make initialization of body pose clear
+        # linear transformation then rotation to achieve a position, and body orientation
+        self.ht_body = transformations.homog_transxyz(self.x,self.y,self.z) @ transformations.homog_rotxyz(self.phi,self.psi,self.theta)
 
         # Intialize all leg angles to 0, 30, 30 degrees
         self.rb_leg_angles   = [0,-30*d2r,60*d2r]
