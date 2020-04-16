@@ -116,7 +116,7 @@ class TestRotationMatrices(unittest.TestCase):
             print (err)
         self.assertTrue(res)
 
-    def test_rotate_transform(self):
+    def test_homog_transform(self):
         '''Test the homogeneous transformation via a contrived example'''
         
         ht = transformations.homog_transform(90*d2r,90*d2r,90*d2r,1,2,3)
@@ -135,6 +135,7 @@ class TestRotationMatrices(unittest.TestCase):
             print (err)
         self.assertTrue(res)
         
+    def test_homog_transform_inverse(self):
 
 
 if __name__ == '__main__':

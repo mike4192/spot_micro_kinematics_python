@@ -140,6 +140,21 @@ def homog_transform(x_ang,y_ang,z_ang,x_t,y_t,z_t):
 def ht_inverse(ht):
     '''Calculate the inverse of a homogeneous transformation matrix
 
+    The inverse of a homogeneous transformation matrix can be represented as a
+    a matrix product of the following:
+
+                -------------------   ------------------- 
+                |           |  0  |   | 1   0   0  -x_t |
+    ht_inv =    |   R^-1    |  0  |   | 0   1   0  -y_t |
+                |___________|  0  | * | 0   0   1  -z_t |
+                | 0   0   0 |  1  |   | 0   0   0   1   |
+                -------------------   -------------------
+
+    Where R^-1 is the ivnerse of the rotation matrix portion of the homogeneous
+    transform (the first three rows and columns). Note that the inverse
+    of a rotation matrix is equal to its transpose. And x_t, y_t, z_t are the
+    linear trasnformation portions of the original transform.    
+    
     Args
         ht: Input 4x4 nump matrix homogeneous transformation
 
