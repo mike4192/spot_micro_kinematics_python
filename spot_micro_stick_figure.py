@@ -119,15 +119,18 @@ class SpotMicroLeg(object):
         # ht = ht_leg_start @ t01 @ t12 @ t23 @ t34 
         p1 = self._ht_leg_start[0:3,3]
 
-        ht_buildup = self._ht_leg_start @ self._t01 @ self._t12
+        # ht_buildup = self._ht_leg_start @ self._t01 @ self._t12
+        ht_buildup = np.matmul(np.matmul(self._ht_leg_start, self._t01), self._t12)
 
         p2 = ht_buildup[0:3,3]
 
-        ht_buildup = ht_buildup @ self._t23
-
+        # ht_buildup = ht_buildup @ self._t23
+        ht_buildup = np.matmul(ht_buildup, self._t23)
+        
         p3 = ht_buildup[0:3,3]
 
-        ht_buildup = ht_buildup @ self._t34
+        # ht_buildup = ht_buildup @ self._t34
+        ht_buildup = np.matmul(ht_buildup, self._t34)
 
         p4 = ht_buildup[0:3,3]
 
@@ -135,7 +138,8 @@ class SpotMicroLeg(object):
 
     def get_foot_position_in_global_coords(self):
         ''' Return coordinates of the foot in the leg's local coordinate frame'''
-        ht_foot = self._ht_leg_start @ self._t01 @ self._t12 @ self._t23 @ self._t34
+        # ht_foot = self._ht_leg_start @ self._t01 @ self._t12 @ self._t23 @ self._t34
+        ht_foot = np.matmul(np.matmul(np.matmul(np.matmul(self._ht_leg_start, self._t01), self._t12), self._t23), self._t34)
         return ht_foot[0:3,3]
 
 
@@ -189,13 +193,13 @@ class SpotMicroStickFigure(object):
         self.theta = theta
         self.psi = psi   
 
-        # self.ht_body = transformations.homog_transform(self.phi,self.psi,self.theta,
-        #                                                self.x,self.y,self.z)
-
-        #TODO: make initialization of body pose clear, e.g:
-        # linear transformation then rotation to achieve a position, and body orientation
-        self.ht_body = transformations.homog_transxyz(self.x,self.y,self.z) @ transformations.homog_rotxyz(self.phi,self.psi,self.theta)
-
+        # Initialize Body Pose
+        # Convention for this class is to initialize the body pose at a x,y,z position, with a phi,theta,psi orientation
+        # To achieve this pose, need to apply a homogeneous translation first, then a homgeneous rotation
+        # If done the other way around, a coordinate system will be rotate first, then translated along the rotated coordinate system
+        # self.ht_body = transformations.homog_transxyz(self.x,self.y,self.z) @ transformations.homog_rotxyz(self.phi,self.psi,self.theta)
+        self.ht_body = np.matmul(transformations.homog_transxyz(self.x,self.y,self.z), transformations.homog_rotxyz(self.phi,self.psi,self.theta))
+        
         # Intialize all leg angles to 0, 30, 30 degrees
         self.rb_leg_angles   = [0,-30*d2r,60*d2r]
         self.rf_leg_angles   = [0,-30*d2r,60*d2r]
@@ -325,10 +329,8 @@ class SpotMicroStickFigure(object):
         # Get current body pose, and replace rotation part with r_xyz
         ht_body = self.ht_body
 
-        print(ht_body)
         ht_body[0:3,0:3] = r_xyz
 
-        print(ht_body)
         # Call method to set absolute body pose
         self.set_absolute_body_pose(ht_body)
 
