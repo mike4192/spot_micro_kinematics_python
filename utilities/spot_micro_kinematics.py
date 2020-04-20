@@ -1,8 +1,8 @@
 """Forward and inverse kinematic transformations for a quadriped robot. 
 
 Equations from:
-Şen, Muhammed Arif & Bakırcıoğlu, Veli & Kalyoncu, Mete. (2017). 
-Inverse Kinematic Analysis Of A Quadruped Robot. 
+Sen, Muhammed Arif & Bakircioglu, Veli & Kalyoncu, Mete. (2017). 
+Inverse Kinematic Analysis Of A Quadruped Robot.
 International Journal of Scientific & Technology Research. 6. 
 """
 
