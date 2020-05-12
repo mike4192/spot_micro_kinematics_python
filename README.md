@@ -20,7 +20,7 @@ The figures below, taken from the paper above, show the general leg  and robot g
 ## Installation
 This package can be installed via pip install. Reccomend installing into a virtual environment instead of to your system!
 For example, if you have a python virtual environment somwhere, you could call pip install to the path of this package:
-'pip install /your/path/to/spot_micro_kinematics/
+```pip install /your/path/to/spot_micro_kinematics/```
 
 Alternatively, for a quick and dirty installation, copy the this package next to a python script that wants to use it.
 
