@@ -2,6 +2,8 @@
 
 A python library for forward and inverse kinematic operations on a spot micro quadruped.
 
+![Animation](assets/animation.gif)
+
 This library is designed around the spot micro 3d printable model developed by KDY0523, which can be found on thingverse (https://www.thingiverse.com/thing:3445283). The only requirement for this library is numpy for matrix operations.
 
 The forward and inverse kinematics of this library are based on the following paper:
@@ -10,9 +12,15 @@ The forward and inverse kinematics of this library are based on the following pa
     Inverse Kinematic Analysis Of A Quadruped Robot.
     International Journal of Scientific & Technology Research. 6.
 
+The figures below, taken from the paper above, show the general leg  and robot geometry implemented in this library. Note, the robot geometry implemented in this library is different than that of the paper. Legs **1** and **3** are rotated 180 degrees, as that's the way they are oriented on the spot micro frame.
+
+![Robot Geometry](assets/robot_geometry.png)
+![Leg Geometry](assets/general_leg_geometry.png)
+
 ## Assumptions
 This library contains various hard coded lengths of the spot micro frame as measured by me with a set of digital calipers. All dimensions are approximate at best. These lengths can be modified, they are the following properties of the SpotMicroStickFigure class:
-```hip_length
+```
+hip_length
 upper_leg_length
 lower_leg_length
 body_width
@@ -75,4 +83,6 @@ This library contains some unit tests. They can be run by cloning the library, c
 ## Plotting
 Some basic plotting scripts are also provided in the tests folder. These require matplotlib. They can be executed by cd'ing to a directory one level above where this library is checked out, and running a command as folloiws if this library were checked out to a directory called smkpython:
 `python -m smkpython.tests.plotting.plot_animation.py`
+
+A sample of the animation is shown via the gif at the top of this readme.
 
