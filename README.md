@@ -17,6 +17,27 @@ The figures below, taken from the paper above, show the general leg  and robot g
 ![Robot Geometry](assets/robot_geometry.png)
 ![Leg Geometry](assets/general_leg_geometry.png)
 
+## Installation
+This package can be installed via pip install. Reccomend installing into a virtual environment instead of to your system!
+For example, if you have a python virtual environment somwhere, you could call pip install to the path of this package:
+'pip install /your/path/to/spot_micro_kinematics/
+
+Alternatively, for a quick and dirty installation, copy the this package next to a python script that wants to use it.
+
+```
+├── your_script.py
+└── spot_micro_kinematics
+    ├── __init__.py
+    ├── spot_micro_stick_figure.py
+    ├── ...
+```
+
+And in your_script.py, just import:
+```python
+from spot_micro_kinematics.spot_micro_stick_figure import SpotMicroStickFigure
+```
+
+
 ## Assumptions
 This library contains various hard coded lengths of the spot micro frame as measured by me with a set of digital calipers. All dimensions are approximate at best. These lengths can be modified, they are the following properties of the SpotMicroStickFigure class:
 ```
