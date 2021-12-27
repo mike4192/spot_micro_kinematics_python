@@ -22,7 +22,7 @@ ax.set_ylabel('Z')
 
 ax.set_xlim3d([-0.15, 0.15])
 ax.set_zlim3d([-0.25, 0.05])
-ax.set_ylim3d([-0.15,0.15])
+ax.set_ylim3d([0.15,-0.15])
 
 # ax.invert_yaxis()
 
