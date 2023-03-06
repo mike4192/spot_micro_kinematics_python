@@ -100,7 +100,7 @@ def t_0_to_1(theta1,l1):
     # I believe there is a typo in the paper. The paper lists this matrix as:
     # 
     # t =    [ cos(theta1)     -sin(theta1)    0        -l1*cos(theta1);
-    #          sin(theta1)     -cos(theta1)    0        -l1*sin(theta1);
+    #          sin(theta1)     cos(theta1)    0        -l1*sin(theta1);
     #                    1                0    0                      0;
     #                    0                0    0                      1;]
     # 
@@ -109,7 +109,7 @@ def t_0_to_1(theta1,l1):
     # axis's z axis is the same as the original. So I think the matrix should be:
     # 
     # t =    [ cos(theta1)     -sin(theta1)    0        -l1*cos(theta1);
-    #          sin(theta1)     -cos(theta1)    0        -l1*sin(theta1);
+    #          sin(theta1)     cos(theta1)    0        -l1*sin(theta1);
     #                    0                0    1                      0;d
     #                    0                0    0                      1;]
     
